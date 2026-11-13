@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雙視角決策者：跨域交手與秩序交織的十個賽局</title>
+    <!-- 引入 Tailwind CSS 進行現代化樣式排版 -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .stat-bar { transition: width 0.4s ease-in-out; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col justify-between font-sans">
+
+    <!-- 頂部導航與標題 -->
+    <header class="bg-gray-800 border-b border-gray-700 py-4 px-6 shadow-md">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold text-yellow-400">🏛️ 智庫決策模擬器：跨域交手與秩序交織</h1>
+            <span id="round-indicator" class="text-sm bg-gray-700 px-3 py-1 rounded-full text-indigo-300">第 1 / 10 幕</span>
+        </div>
+    </header>
+
+    <!-- 主要遊戲畫面 -->
+    <main class="max-w-3xl mx-auto w-full p-4 md:p-6 my-auto">
+        
+        <!-- 四維資源狀態儀表板 -->
+        <div class="bg-gray-800 border border-gray-700 rounded-xl p-4 mb-6 shadow-lg grid grid-cols-2 md:grid-cols-4 gap-4">
+            <!-- 宗教/歷史情感 -->
+            <div>
+                <div class="flex justify-between text-xs mb-1 text-gray-400">
+                    <span>📜 宗教/歷史</span>
+                    <span id="stat-religion" class="font-bold text-yellow-300">50</span>
+                </div>
+                <div class="w-full bg-gray-700 h-2.5 rounded-full overflow-hidden">
+                    <div id="bar-religion" class="bg-yellow-500 h-2.5 stat-bar" style="width: 50%"></div>
+                </div>
+            </div>
+            <!-- 民心/公民滿意度 -->
+            <div>
+                <div class="flex justify-between text-xs mb-1 text-gray-400">
+                    <span>😊 民心/滿意度</span>
+                    <span id="stat-happiness" class="font-bold text-green-300">50</span>
+                </div>
+                <div class="w-full bg-gray-700 h-2.5 rounded-full overflow-hidden">
+                    <div id="bar-happiness" class="bg-green-500 h-2.5 stat-bar" style="width: 50%"></div>
+                </div>
+            </div>
+            <!-- 軍事/國安防衛 -->
+            <div>
+                <div class="flex justify-between text-xs mb-1 text-gray-400">
+                    <span>🛡️ 軍事/國安</span>
+                    <span id="stat-military" class="font-bold text-blue-300">50</span>
+                </div>
+                <div class="w-full bg-gray-700 h-2.5 rounded-full overflow-hidden">
+                    <div id="bar-military" class="bg-blue-500 h-2.5 stat-bar" style="width: 50%"></div>
+                </div>
+            </div>
+            <!-- 經濟/財政資本 -->
+            <div>
+                <div class="flex justify-between text-xs mb-1 text-gray-400">
+                    <span>💰 經濟/財政</span>
+                    <span id="stat-economy" class="font-bold text-purple-300">50</span>
+                </div>
+                <div class="w-full bg-gray-700 h-2.5 rounded-full overflow-hidden">
+                    <div id="bar-economy" class="bg-purple-500 h-2.5 stat-bar" style="width: 50%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 遊戲互動卡片區 -->
+        <div id="game-card" class="bg-gray-800 border border-gray-700 rounded-2xl p-6 shadow-2xl relative">
+            <div id="case-date" class="text-xs text-indigo-400 font-semibold mb-2 uppercase tracking-wider">2025/12</div>
+            <h2 id="case-title" class="text-2xl font-bold text-white mb-4">載入中...</h2>
+            <p id="case-desc" class="text-gray-300 text-base leading-relaxed mb-8 bg-gray-900/50 p-4 rounded-xl border border-gray-700/50">載入中...</p>
+
+            <!-- 選擇按鈕區 -->
+            <div class="space-y-4">
+                <button onclick="makeChoice('A')" class="w-full text-left bg-gradient-to-r from-amber-900/40 to-gray-800 hover:from-amber-800/60 hover:to-gray-700 border border-amber-600/40 hover:border-amber-500 p-4 rounded-xl transition-all shadow-md group">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-amber-400 bg-amber-950/80 px-2.5 py-1 rounded-md border border-amber-700/50 mb-1 inline-block">歷史社會視角 (路徑 A)</span>
+                        <span class="text-xs text-gray-400 group-hover:text-white">點擊選擇 ➔</span>
+                    </div>
+                    <div id="opt-a-text" class="text-gray-200 font-medium mt-1">選項 A 說明</div>
+                </button>
+
+                <button onclick="makeChoice('B')" class="w-full text-left bg-gradient-to-r from-teal-900/40 to-gray-800 hover:from-teal-800/60 hover:to-gray-700 border border-teal-600/40 hover:border-teal-500 p-4 rounded-xl transition-all shadow-md group">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-teal-400 bg-teal-950/80 px-2.5 py-1 rounded-md border border-teal-700/50 mb-1 inline-block">公民社會視角 (路徑 B)</span>
+                        <span class="text-xs text-gray-400 group-hover:text-white">點擊選擇 ➔</span>
+                    </div>
+                    <div id="opt-b-text" class="text-gray-200 font-medium mt-1">選項 B 說明</div>
+                </button>
+            </div>
+        </div>
+
+        <!-- 遊戲結束／結算彈窗 (預設隱藏) -->
+        <div id="modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+            <div class="bg-gray-800 border border-gray-700 rounded-2xl max-w-lg w-full p-6 text-center shadow-2xl">
+                <h3 id="modal-title" class="text-2xl font-bold mb-3 text-yellow-400">遊戲結束</h3>
+                <p id="modal-desc" class="text-gray-300 text-sm leading-relaxed mb-6 bg-gray-900/60 p-4 rounded-xl">結算說明...</p>
+                <button onclick="restartGame()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-6 py-2.5 rounded-xl transition-all shadow-lg">重新開始模擬</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 頁尾 -->
+    <footer class="text-center py-4 text-xs text-gray-500 border-t border-gray-800">
+        雙視角決策模擬器 © 2026 | 基於文獻理論與資源動態平衡設計
+    </footer>
+
+    <!-- 遊戲邏輯 Script -->
+    <script>
+        const cases = [
+            {
+                num: 1, title: "兩岸宮廟交流與宗教統戰", date: "2025/12",
+                desc: "南部大型媽祖廟組團赴陸祖廟進香，統戰部門高規格接待並宣傳『兩岸一家親』。智庫需向國安高層建議應對方針。",
+                optA: "順其自然，配合統戰敘事與歷史情感，尊重民間交流。",
+                optB: "啟動反滲透法與財務透明監督防衛，防範遭統戰滲透。",
+                deltaA: { religion: 15, happiness: -5, military: -10, economy: 10 },
+                deltaB: { religion: -10, happiness: 10, military: 15, economy: -5 }
+            },
+            {
+                num: 2, title: "南海島礁巡航與差序格局", date: "2026/01",
+                desc: "東南亞小國因自主開發南海資源，遭到大國海警船以『差序格局』祭出最強烈懲罰。外交部急需您的戰略評估。",
+                optA: "低調避險，順應『以小事大』原則避免激化矛盾。",
+                optB: "訴諸國際海洋法公約與多邊集體抗衡，發表聲援。",
+                deltaA: { religion: 5, happiness: -10, military: -15, economy: 10 },
+                deltaB: { religion: -5, happiness: 10, military: 15, economy: -10 }
+            },
+            {
+                num: 3, title: "朝鮮半島歷史認同與事大辯論", date: "2026/01 中旬",
+                desc: "朝鮮半島智庫辯論是否重啟對中原王朝歷史『事大』敘事與朝貢外交定位。國際關係學報向您邀稿。",
+                optA: "順應傳統，承認朝鮮『畏威懷德』與朝貢體系合理性。",
+                optB: "強調主權，倡導現代公民與文化主權獨立，揚棄復古論。",
+                deltaA: { religion: 15, happiness: -5, military: 0, economy: 0 },
+                deltaB: { religion: -10, happiness: 10, military: 0, economy: 0 }
+            },
+            {
+                num: 4, title: "中南半島經貿走廊與順差", date: "2026/02",
+                desc: "中國對中南半島三國維持龐大貿易順差，當地勞工與環保團體擔憂債務與資源掠奪。您主持區域經貿聽證會。",
+                optA: "擁抱紅利，定調為現代版『以小事大』結構西進。",
+                optB: "支援監督，呼應當地公民社會推動經貿平權與風險分散。",
+                deltaA: { religion: 5, happiness: -10, military: -5, economy: 20 },
+                deltaB: { religion: -5, happiness: 15, military: 5, economy: -15 }
+            },
+            {
+                num: 5, title: "跨海峽青年論壇與命運共同體", date: "2026/02 中旬",
+                desc: "中共中央統戰部擴大舉辦青年論壇與就業補貼，吸引台灣青年赴陸參訪。教育部向您徵詢因應對策。",
+                optA: "樂見融合，順應統戰整合讓青年赴陸獲取紅利。",
+                optB: "風險教育，推動青年自主風險意識與透明申報。",
+                deltaA: { religion: 10, happiness: -10, military: -10, economy: 10 },
+                deltaB: { religion: -5, happiness: 10, military: 10, economy: -5 }
+            },
+            {
+                num: 6, title: "邊境安全與攻勢/守勢現實主義", date: "2026/02 下旬",
+                desc: "邊境地區爆發突發軍事摩擦，大國面臨是否發動大規模擴張或克制防守的抉擇。國安會召開閉門會議。",
+                optA: "守勢克制，以政權內部穩定與存續為先不輕易擴張。",
+                optB: "多邊嚇阻，聯合理念相近國家建立集體安全網反制。",
+                deltaA: { religion: 5, happiness: 10, military: 0, economy: 10 },
+                deltaB: { religion: -5, happiness: -5, military: 20, economy: -10 }
+            },
+            {
+                num: 7, title: "文化遺產申遺與歷史正統爭奪", date: "2026/03",
+                desc: "東亞傳統祭祀節慶面臨 UNESCO 跨國聯合申報，各國爭奪歷史文化詮釋權。文化部邀請您擔任審查顧問。",
+                optA: "接受正統，順應大國主導的正統敘事換取和諧。",
+                optB: "捍衛平權，強調在地文化多元與主體自主性。",
+                deltaA: { religion: 20, happiness: -10, military: 0, economy: 0 },
+                deltaB: { religion: -15, happiness: 15, military: 0, economy: 0 }
+            },
+            {
+                num: 8, title: "跨國數位平台與威權公共領域", date: "2026/03 中旬",
+                desc: "某短影音平台被揭露演算法受遠端干預，大量推送統戰與『兩岸一家親』敘事。立法院召開公聽會。",
+                optA: "尊重自由，視為現代媒體競爭自然現象不干預。",
+                optB: "數位防衛，推動《數位服務法》與資訊透明監管。",
+                deltaA: { religion: 10, happiness: -15, military: -10, economy: 5 },
+                deltaB: { religion: -5, happiness: 15, military: 15, economy: -10 }
+            },
+            {
+                num: 9, title: "區域經濟協定與避險策略", date: "2026/03 中下旬",
+                desc: "東南亞某國在美中雙強夾擊下，面臨是否加入大國主導的基礎建設與經貿整合。台商與智庫向您徵詢風向。",
+                optA: "政治換利，採傳統『事大避險』以政治儀式換紅利。",
+                optB: "多邊平衡，堅持國會監督與分散投資維持自主。",
+                deltaA: { religion: 10, happiness: -10, military: -15, economy: 25 },
+                deltaB: { religion: -5, happiness: 10, military: 10, economy: -15 }
+            },
+            {
+                num: 10, title: "兩岸基層里長互訪與治理競合", date: "2026/03 下旬",
+                desc: "中共統戰部門推動台灣基層里長赴陸考察社區治理。國安高層要求您繳交最終政策決策白皮書。",
+                optA: "基層融合，融入兩岸基層命運共同體擴大交流。",
+                optB: "法治監督，嚴格落實法規與公民監督防止動員。",
+                deltaA: { religion: 20, happiness: -10, military: -15, economy: 10 },
+                deltaB: { religion: -10, happiness: 15, military: 20, economy: -5 }
+            }
+        ];
+
+        let currentIdx = 0;
+        let stats = { religion: 50, happiness: 50, military: 50, economy: 50 };
+        let choicesHistory = [];
+
+        function initGame() {
+            currentIdx = 0;
+            stats = { religion: 50, happiness: 50, military: 50, economy: 50 };
+            choicesHistory = [];
+            document.getElementById('modal').classList.add('hidden');
+            updateUI();
+        }
+
+        function updateUI() {
+            // 更新狀態條與數值
+            for (let key in stats) {
+                document.getElementById(`stat-${key}`).innerText = stats[key];
+                document.getElementById(`bar-${key}`).style.width = `${stats[key]}%`;
+            }
+
+            // 檢查失敗條件 (Lapse 機制: 數值 <= 10 或 >= 100)
+            for (let key in stats) {
+                if (stats[key] <= 10) {
+                    triggerGameOver(key, 'collapse');
+                    return;
+                }
+                if (stats[key] >= 100) {
+                    triggerGameOver(key, 'extreme');
+                    return;
+                }
+            }
+
+            // 檢查是否通關
+            if (currentIdx >= cases.length) {
+                triggerVictory();
+                return;
+            }
+
+            // 載入當前案例
+            let c = cases[currentIdx];
+            document.getElementById('round-indicator').innerText = `第 ${c.num} / 10 幕`;
+            document.getElementById('case-date').innerText = c.date;
+            document.getElementById('case-title').innerText = c.title;
+            document.getElementById('case-desc').innerText = c.desc;
+            document.getElementById('opt-a-text').innerText = c.optA;
+            document.getElementById('opt-b-text').innerText = c.optB;
+        }
+
+        function makeChoice(choice) {
+            let c = cases[currentIdx];
+            let delta = (choice === 'A') ? c.deltaA : c.deltaB;
+            choicesHistory.push(choice);
+
+            // 更新數值 (限制 0-100)
+            for (let key in delta) {
+                stats[key] += delta[key];
+                if (stats[key] < 0) stats[key] = 0;
+                if (stats[key] > 100) stats[key] = 100;
+            }
+
+            currentIdx++;
+            updateUI();
+        }
+
+        function triggerGameOver(key, type) {
+            let names = { religion: '宗教/歷史情感', happiness: '民心/公民滿意度', military: '軍事/國安防衛', economy: '經濟/財政資本' };
+            let modalTitle = document.getElementById('modal-title');
+            let modalDesc = document.getElementById('modal-desc');
+
+            modalTitle.innerText = "💀 遊戲結束：國家治理崩潰";
+            if (type === 'collapse') {
+                modalDesc.innerHTML = `指標 <b>「${names[key]}」</b> 徹底潰敗（降至 ${stats[key]} 分）！<br><br>` +
+                    (key === 'economy' ? "國家陷入嚴重財政破產與罷工潮，政權倒台，智庫被迫解散。" :
+                     key === 'happiness' ? "民心徹底崩潰，爆發大規模街頭抗議與政權彈劾下台。" :
+                     key === 'military' ? "國防與心防門戶大開，關鍵設施與資安遭到外部全面接管。" :
+                     "文化斷層與歷史記憶徹底撕裂，社會陷入無政府精神真空。");
+            } else {
+                modalTitle.innerText = "💀 遊戲結束：極端化窒息";
+                modalDesc.innerHTML = `指標 <b>「${names[key]}」</b> 達到極端 100 分！<br><br>單一極端敘事吞噬整個社會，民主多元與智庫自主徹底窒息。`;
+            }
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function triggerVictory() {
+            let countA = choicesHistory.filter(x => x === 'A').length;
+            let countB = choicesHistory.filter(x => x === 'B').length;
+            let modalTitle = document.getElementById('modal-title');
+            let modalDesc = document.getElementById('modal-desc');
+
+            modalTitle.innerText = "🎉 恭喜通關：十個賽局圓滿達成！";
+            if (countA >= countB) {
+                modalDesc.innerHTML = `🏆 <b>【最終結局 A：威權整合與秩序重整之巔】</b><br><br>` +
+                    `您多數採用歷史社會視角（${countA}次 A / ${countB}次 B）。成功協助建構了貫穿高層到基層的「兩岸命運共同體」網絡。<br>` +
+                    `<b>學理解釋：</b>呼應王韻、陳宥喬（2023）統戰辯證與蘇軍瑋（2023）差序格局，透過持續互動與名分鞏固，確立了垂直階層秩序。`;
+            } else {
+                modalDesc.innerHTML = `🏆 <b>【最終結局 B：民主防線鞏固與主體自主之勝利】</b><br><br>` +
+                    `您多數採用公民社會視角（${countB}次 B / ${countA}次 A）。堅守契約、法治與多元價值，成功抵禦跨海峽統戰與干預。<br>` +
+                    `<b>學理解釋：</b>體現公民社會自主性與民主防衛機制（法治、透明監督），證明多元社會能有效「縮放」外部干預。`;
+            }
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function restartGame() {
+            initGame();
+        }
+
+        // 初始啟動
+        initGame();
+    </script>
+</body>
+</html>
